@@ -2,6 +2,10 @@
 
 A machine learning project to predict **hourly PM2.5** and derive **Air Quality Index (AQI)** categories, with an interactive **Streamlit dashboard** for date-wise analysis.
 
+## 🔗 Live Demo
+
+- Streamlit App: https://aqi-predictor-manideep.streamlit.app/
+
 ## 🌍 What This Project Does
 
 - Builds lag-based time-series features from weather + historical PM2.5 data.
