@@ -1,10 +1,10 @@
 # AQI Predictor
 
-A machine learning project to predict **hourly PM2.5** and derive **Air Quality Index (AQI)** categories, with an interactive **Streamlit dashboard** for date-wise analysis.
+A machine learning project to predict **hourly PM2.5** and derive **Air Quality Index (AQI)** categories, exposed via a **FastAPI** service for date-wise analysis.
 
 ## 🔗 Live Demo
 
-- Streamlit App: https://aqi-predictor-manideep.streamlit.app/
+- API docs (when running locally): http://127.0.0.1:8000/docs
 
 ## 🌍 What This Project Does
 
@@ -12,7 +12,7 @@ A machine learning project to predict **hourly PM2.5** and derive **Air Quality 
 - Trains and compares multiple regression models.
 - Selects the best-performing model (by RMSE) and saves it as `model.pkl`.
 - Converts predicted PM2.5 values into AQI values and AQI categories.
-- Visualizes predictions with interactive charts in Streamlit.
+- Serves predictions and Plotly chart JSON via REST endpoints.
 
 ## 🧠 Models Trained
 
@@ -109,7 +109,7 @@ The notebook and dashboard include these visualizations:
 4. **Hourly AQI: Actual vs Predicted**
 5. **Predicted AQI with severity bands**
 6. **Prediction error by hour**
-7. **Interactive AQI bar chart by category color (Streamlit)**
+7. **Interactive AQI bar chart by category color (API)**
 
 ### Suggested Report Screenshots
 
@@ -123,7 +123,9 @@ If you want this README to show real chart images on GitHub, save screenshots in
 
 ## 🗂 Project Structure
 
-- `app.py` → Streamlit dashboard
+- `main.py` → FastAPI application entry point
+- `core/` → data loading, model inference, AQI logic, and chart builders
+- `schemas.py` → Pydantic response models
 - `modeling.ipynb` → model training, evaluation, plotting, and model export
 - `data_extraction.ipynb` / `eda.IPYNB` → data collection and exploration
 - `output2.csv` → training data
@@ -139,21 +141,32 @@ If you want this README to show real chart images on GitHub, save screenshots in
 pip install -r requirements.txt
 ```
 
-### 2) Launch app
+### 2) Launch API
 
 ```bash
-streamlit run app.py
+uvicorn main:app --reload
 ```
 
-## ✅ Dashboard Outputs
+## ✅ API Endpoints
 
-For the selected date, the app provides:
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Health check |
+| `GET` | `/dates` | Available prediction dates from test data |
+| `GET` | `/predictions/{date}` | Metrics + full hourly predictions table |
+| `GET` | `/predictions/{date}/metrics` | Average/peak AQI and average PM2.5 |
+| `GET` | `/predictions/{date}/table` | Hourly predictions table only |
+| `GET` | `/charts/{date}/aqi-bands` | Predicted AQI with severity bands (Plotly JSON) |
+| `GET` | `/charts/{date}/pm25-comparison` | Actual vs predicted PM2.5 chart |
+| `GET` | `/charts/{date}/hourly-aqi-bar` | Category-colored hourly AQI bar chart |
+
+For the selected date (`YYYY-MM-DD`), the API provides:
 
 - Average predicted AQI
 - Peak predicted AQI
 - Average predicted PM2.5
 - Full hourly prediction table
-- Interactive AQI and PM2.5 charts
+- Plotly chart payloads for AQI and PM2.5 visualizations
 
 ## 🔮 Future Improvements
 
@@ -164,4 +177,4 @@ For the selected date, the app provides:
 
 ---
 
-Built with **Python, Pandas, Scikit-learn, Plotly, and Streamlit**.
+Built with **Python, Pandas, Scikit-learn, Plotly, and FastAPI**.

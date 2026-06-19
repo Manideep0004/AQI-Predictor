@@ -1,6 +1,7 @@
-streamlit
+fastapi
+uvicorn[standard]
 pandas
 scikit-learn
-matplotlib
 joblib
 plotly
+pydantic
